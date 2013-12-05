@@ -71,6 +71,13 @@ namespace ZeroMQ.Interop
                 zmq_unbind = NativeLib.GetUnmanagedFunction<ZmqBindProc>("zmq_unbind");
                 zmq_disconnect = NativeLib.GetUnmanagedFunction<ZmqConnectProc>("zmq_disconnect");
 
+                zmq_proxy = NativeLib.GetUnmanagedFunction<ZmqProxyProc>("zmq_proxy");
+                
+                zmq_stopwatch_start = NativeLib.GetUnmanagedFunction<ZmqStopwatchStartProc>("zmq_stopwatch_start");
+                zmq_stopwatch_stop = NativeLib.GetUnmanagedFunction<ZmqStopwatchStopProc>("zmq_stopwatch_stop");
+
+                zmq_sleep = NativeLib.GetUnmanagedFunction<ZmqSleepProc>("zmq_sleep");
+
                 PollTimeoutRatio = 1;
                 ZmqMsgTSize = Zmq3MsgTSize;
             }
@@ -111,6 +118,10 @@ namespace ZeroMQ.Interop
             zmq_strerror = NativeLib.GetUnmanagedFunction<ZmqStrErrorProc>("zmq_strerror");
             zmq_version = NativeLib.GetUnmanagedFunction<ZmqVersionProc>("zmq_version");
             zmq_poll = NativeLib.GetUnmanagedFunction<ZmqPollProc>("zmq_poll");
+            zmq_proxy = NativeLib.GetUnmanagedFunction<ZmqProxyProc>("zmq_proxy");
+            zmq_stopwatch_start = NativeLib.GetUnmanagedFunction<ZmqStopwatchStartProc>("zmq_stopwatch_start");
+            zmq_stopwatch_stop = NativeLib.GetUnmanagedFunction<ZmqStopwatchStopProc>("zmq_stopwatch_stop");
+            zmq_sleep = NativeLib.GetUnmanagedFunction<ZmqSleepProc>("zmq_sleep");
         }
 
         private static void AssignCurrentVersion(out int majorVersion, out int minorVersion, out int patchVersion)
@@ -256,6 +267,22 @@ namespace ZeroMQ.Interop
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate int ZmqPollProc([In] [Out] PollItem[] items, int numItems, long timeoutMsec);
         public static ZmqPollProc zmq_poll;
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate int ZmqProxyProc(IntPtr frontend, IntPtr backend, IntPtr capture);
+        public static ZmqProxyProc zmq_proxy;
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate IntPtr ZmqStopwatchStartProc();
+        public static ZmqStopwatchStartProc zmq_stopwatch_start;
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate int ZmqStopwatchStopProc(IntPtr watch);
+        public static ZmqStopwatchStopProc zmq_stopwatch_stop;
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate void ZmqSleepProc(int seconds);
+        public static ZmqSleepProc zmq_sleep;
     }
     // ReSharper restore InconsistentNaming
 }
